@@ -1,5 +1,9 @@
 import os
+
+import numpy as np
+from sklearn.model_selection import train_test_split
 from translate import translate
+from PIL import Image
 
 
 class Animals_loader:
@@ -22,20 +26,42 @@ class Animals_loader:
     labels = []
 
     def __init__(self):
-
         self.dir = "Animals-10/raw-img"
 
     # Split the data into training, and test set
-    def split(self):
-        pass
+    def split(self, X, Y):
+        """split _summary_
+
+        Parameters
+        ----------
+        X : Array
+            images as arrays
+        Y : Array
+            corresponding labels to images
+
+        Returns
+        -------
+        train & test data
+            split data into test and train set
+        """
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, Y, test_size=0.33, shuffle=True
+        )
+        return X_train, X_test, y_train, y_test
 
     # Split the data into training: {x_sub_train,y_sub_train, x_validation,y_validation} and test set
-    def split_validation(self):
+    def split_validation(self, data):
         pass
 
     # rename to extract or label
     def create_dataset(self):
+        """create_dataset: binds image with corresponding label
 
+        Returns
+        -------
+        Array
+            [[image,label],]
+        """
         print("Creating a label array of the raw-img directory...\n")
         for animal in os.listdir(self.dir):
             self.labels.append([translate[animal], animal])
@@ -43,5 +69,30 @@ class Animals_loader:
             for file_name in os.listdir(class_dir):
                 file_path = os.path.join(class_dir, file_name)
                 self.dataset.append((file_path, animal))
-        print(self.dataset[0])
         return self.dataset
+
+    def image_to_array(self, data):
+        """image_to_array: converts image to numpy array
+
+        Parameters
+        ----------
+        data : Array
+            Array of images with label
+
+        Returns
+        -------
+        Array
+            image array and corresponding label
+        """
+        img_array = []
+        label_array = []
+        print("Converting a label image array to numpy arrays...\n")
+        # image_size = (128, 128)
+        for image in data:
+            with Image.open(image[0]) as img:
+                img_arr = np.array(img)
+            label = image[1]
+            img_arr = np.array(img)
+            img_array.append(img_arr)
+            label_array.append(label)
+        return img_array, label_array
