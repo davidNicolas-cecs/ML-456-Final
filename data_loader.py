@@ -28,7 +28,7 @@ class Animals_loader:
     def __init__(self):
         self.dir = "Animals-10/raw-img"
         
-    def val_split(x,y):
+    def val_split(self, x,y):
         return train_test_split(x,y,test_size=.2,random_state=1)
 
     # Split the data into training, and test set
@@ -94,6 +94,7 @@ class Animals_loader:
         # image_size = (128, 128)
         for image in data:
             with Image.open(image[0]) as img:
+                img = img.convert("RGB")
                 # normalizing
                 img = img.resize(img_size)
                 img_arr = np.array(img)
@@ -102,4 +103,4 @@ class Animals_loader:
             label = image[1]
             img_array.append(img_arr)
             label_array.append(label)
-        return img_array, label_array
+        return np.array(img_array), label_array

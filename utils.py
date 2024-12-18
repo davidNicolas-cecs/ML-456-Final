@@ -32,7 +32,7 @@ label_dict = {
 
 
 def hot_encode(y):
-    return to_categorical(y, num_classes=10)  # 10 classes, adjust if necessary
+    return to_categorical(y, num_classes=10)  
 
 
 def encode(y):

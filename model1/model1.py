@@ -1,4 +1,5 @@
 
+import numpy as np
 from data_loader import Animals_loader
 from utils import encode, hot_encode
 
@@ -38,7 +39,7 @@ def build_model(hp):
   for i in range(hp.Int("num_layers_conv", 3, 10)):
       model.add(
           Conv2D(
-              filters=hp.Int(f"filters_{i-1}", min_value=32, max_value=512, step=32), #32
+              filters=hp.Int(f"filters_{i+1}", min_value=32, max_value=512, step=32), #32
               kernel_size=(3,3), 
               activation="relu",
               padding="valid",
@@ -61,7 +62,7 @@ def build_model(hp):
           Dense(
                 units=hp.Int(f'dense_units{j}', min_value=32, max_value=512, step=32),
                 activation='sigmoid',
-                kernel_regularizer=l1(.1)
+                kernel_regularizer=l1(.01)
             )
         )
 
@@ -91,8 +92,6 @@ def main():
         y_train,
         y_test,
     ) = prep(animal_loader)
-    max_imgs = len(x_train)
-    print(x_train[0], y_train[0])
     # Split into validation set
     sub_train, x_valid, y_sub_train, y_valid = animal_loader.val_split(x_train,y_train)
     
@@ -101,7 +100,8 @@ def main():
     tuner = kt.RandomSearch(
         hypermodel=build_model,
         objective='val_accuracy',# maybe no early stop
-        max_trials=2, # 15
+        max_trials=10, # 15
+        project_name="model_1_tuner"
     )
     '''
     early_stopping = EarlyStopping(
@@ -115,9 +115,13 @@ def main():
     # search for best model
     tuner.search(sub_train, y_sub_train, epochs=15, validation_data = (x_valid,y_valid), batch_size=32) # change to actual val later
 
-
+    models = tuner.get_best_models(num_models=1)
+    best_model = models[0]
+    best_model.summary()
+    
 if __name__ == "__main__":
     print(
-        "\nStarting Model 1\n: * Contains ?? layers\n, *Every 2 layers of Conv2D, a batch norm and maxpooling layer is applied\n,\n *Possible dropout layer * ??? Dense Layers\m *No variation in padding\n*No variation in strides, use l1 regularization"
+        "\nStarting Model 1:\n - Contains ?? layers\n - Every 2 layers of Conv2D, a batch norm and maxpooling layer is applied\n - Possible dropout layer\n - ??? Dense Layers \n - No variation in padding\n - No variation in strides, use l1 regularization\n"
+        +"-----------------------------------------------"
     )
     main()

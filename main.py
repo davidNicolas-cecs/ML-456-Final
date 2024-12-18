@@ -11,6 +11,13 @@ dataset = data.create_dataset()
 # convert image to array with label=y
 img_array, y = data.image_to_array(dataset)
 
+print("type of imaage array", type(img_array))
+print("type of individual img", type(img_array[0]))
+
+
+# converting  to numpyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+
+
 # split the data into training and test set
 X_train, X_test, y_train, y_test = data.split(img_array, y)
 
@@ -23,6 +30,12 @@ print("\nLabels: ", y_train_numeric[0])
 print("normalized", X_train[1].shape)
 # Test
 print(y_train_hot_encoded[0])
+print("type of x_train set", type(X_train))
+print("type of y_train set", type(y_train_hot_encoded))
+print("type of individual y", type(y_train_hot_encoded[0]))
+
+
+
 image = Image.fromarray((X_train[0] * 255).astype(np.uint8))
 
 
