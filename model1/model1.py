@@ -14,6 +14,7 @@ import keras_tuner as kt
 
 def prep(animal_loader):
     # Prepping the data using Animal Loader class and utilty functions 
+    
     img_dataset = animal_loader.create_dataset()
     x, y = animal_loader.image_to_array(img_dataset)
     y = encode(y)
@@ -82,7 +83,8 @@ def build_model(hp):
 
 
 
-def main(animal_loader):
+def main():
+    animal_loader = Animals_loader()
     (
         x_train,
         x_test,
@@ -92,8 +94,7 @@ def main(animal_loader):
     max_imgs = len(x_train)
     print(x_train[0], y_train[0])
     # Split into validation set
-    
-    sub_train, x_valid, y_sub_train, y_valid = animal_loader
+    sub_train, x_valid, y_sub_train, y_valid = animal_loader.val_split(x_train,y_train)
     
     # Building the model to run trials to test best model    
     build_model(kt.HyperParameters())
@@ -112,13 +113,11 @@ def main(animal_loader):
     '''
     
     # search for best model
-    tuner.search(x_train, y_train, epochs=4, validation_data = (y_train,y_test), batch_size=64) # change to actual val later
+    tuner.search(sub_train, y_sub_train, epochs=15, validation_data = (x_valid,y_valid), batch_size=32) # change to actual val later
 
 
 if __name__ == "__main__":
-    animal_loader = Animals_loader()
-
     print(
         "\nStarting Model 1\n: * Contains ?? layers\n, *Every 2 layers of Conv2D, a batch norm and maxpooling layer is applied\n,\n *Possible dropout layer * ??? Dense Layers\m *No variation in padding\n*No variation in strides, use l1 regularization"
     )
-    main(animal_loader)
+    main()
