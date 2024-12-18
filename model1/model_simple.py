@@ -2,6 +2,7 @@
 import numpy as np
 from data_loader import Animals_loader
 from utils import encode, hot_encode
+import matplotlib.pyplot as plt
 
 from keras.models import Sequential
 from keras.layers import Dense, Activation, InputLayer, Flatten, Conv2D, MaxPooling2D, Dropout, BatchNormalization
@@ -92,7 +93,28 @@ def build_model():
   return model
 
 
+def plot_training_history(history):
+    plt.figure(figsize=(12, 4))
 
+    # Plot accuracy
+    plt.subplot(1, 2, 1)
+    plt.plot(history.history['accuracy'], label='Training Accuracy')
+    plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.title('Model Accuracy')
+
+    # Plot loss
+    plt.subplot(1, 2, 2)
+    plt.plot(history.history['loss'], label='Training Loss')
+    plt.plot(history.history['val_loss'], label='Validation Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.title('Model Loss')
+
+    plt.show()
 
 
 
@@ -120,7 +142,7 @@ def main():
     model = build_model()
     history = model.fit(
         sub_train, y_sub_train, 
-        batch_size=32, epochs=15, 
+        batch_size=128, epochs=1, 
         validation_data=(x_valid, y_valid),
     )
 
@@ -128,6 +150,15 @@ def main():
     model.summary()
     
     # search for best model
+    
+    # Evaluate the model on the test set
+    test_loss, test_accuracy = model.evaluate(x_test, y_test, verbose=1)
+    print(f"Test Loss: {test_loss:.4f}")
+    print(f"Test Accuracy: {test_accuracy:.4f}")
+
+    plot_training_history(history)
+    #model.save('simple_model1.h5')
+
     
 if __name__ == "__main__":
     print(
