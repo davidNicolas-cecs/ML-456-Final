@@ -144,18 +144,11 @@ def main():
         mode = "min"
     )
     '''
-    with tf.device('/GPU:0'):  # Use GPU:0 if available
-        model = build_model()
-        history = model.fit(
-            sub_train, y_sub_train, 
-            batch_size=128, epochs=1, 
-            validation_data=(x_valid, y_valid),
-        )
         
     model = build_model()
     history = model.fit(
         sub_train, y_sub_train, 
-        batch_size=128, epochs=1, 
+        batch_size=256, epochs=1, 
         validation_data=(x_valid, y_valid),
     )
 
