@@ -1,4 +1,4 @@
-# add early stopping, extra strides options
+
 from data_loader import Animals_loader
 from utils import encode, hot_encode
 
@@ -6,6 +6,11 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation, InputLayer, Flatten, Conv2D, MaxPooling2D, Dropout, BatchNormalization
 from keras.optimizers import l1
 from keras.optimizers import RMSprop
+from keras.callbacks import EarlyStopping
+
+import tensorflow as tf
+from tensorflow import keras
+import keras_tuner as kt
 
 def prep():
     # Prepping the data using Animal Loader class and utilty functions 
@@ -25,18 +30,18 @@ def build_model(hp):
         filters=hp.Int(f'filters_{0}', min_value=32, max_value=512, step=32),
         kernel_size=(3, 3),
         activation="relu",
-        padding="same",
+        padding="valid",
         strides=(1,1),
-        input_shape=(32,32,3)
+        input_shape=(128,128,3)
     )
   )
   for i in range(hp.Int("num_layers_conv", 3, 10)):
       model.add(
           Conv2D(
-              filters=hp.Int(f"filters_{i-1}", min_value=32, max_value=512, step=32),
-              kernel_size=(3,3),
+              filters=hp.Int(f"filters_{i-1}", min_value=32, max_value=512, step=32), #32
+              kernel_size=(3,3), 
               activation="relu",
-              padding="same",
+              padding="valid",
               strides=(1,1)
           )
       )
@@ -47,16 +52,19 @@ def build_model(hp):
           # Optional Dropout
           if hp.Boolean(f"dropout_after_pool_{i}", default=True):
               model.add(Dropout(rate=hp.Float(f"dropout_rate_{i}", min_value=0.2, max_value=0.5, step=0.1)))
-      # Flatten for Dense Layers
-      model.add(Flatten())
-      for j in range(5):
-          model.add(
-              Dense(
-                  units=hp.Int(f'dense_units{j}', min_value=32, max_value=512, step=32),
-                  activation='sigmoid',
-                  kernal_regularization=l1(.1)
-              )
-          )
+      
+  # Flatten for Dense Layers
+  model.add(Flatten())
+      
+  for j in range(5):
+      model.add(
+          Dense(
+                units=hp.Int(f'dense_units{j}', min_value=32, max_value=512, step=32),
+                activation='sigmoid',
+                kernal_regularization=l1(.1)
+            )
+        )
+
   # output layer
   model.add(Dense(10,activation='softmax'))  
   
@@ -70,6 +78,11 @@ def build_model(hp):
     loss = 'categorical_crossentropy', metrics=['accuracy'])
   return model
 
+
+
+
+
+
 def main():
     (
         x_train,
@@ -77,8 +90,27 @@ def main():
         y_train,
         y_test,
     ) = prep()
-    
+    max_imgs = len(x_train)
     print(x_train[0], y_train[0])
+    
+    # Building the model to run trials to test best model    
+    build_model(kt.HyperParameters())
+    tuner = kt.RandomSearch(
+        hypermodel=build_model,
+        objective='val_accuracy',# maybe no early stop
+        max_trials=15,
+    )
+    '''
+    early_stopping = EarlyStopping(
+        monitor='val_loss',
+        patience=5,
+        restore_best_weights = False,
+        mode = "min"
+    )
+    '''
+    
+    # search for best model
+    tuner.search(x_train, y_train, epochs=60)
 
 
 if __name__ == "__main__":
