@@ -1,4 +1,4 @@
-numpy==2.2.0
+numpy==2.0.2
 pandas==2.2.3
 python-dateutil==2.9.0.post0
 pytz==2024.2
@@ -22,7 +22,6 @@ MarkupSafe==3.0.2
 mdurl==0.1.2
 ml-dtypes==0.4.1
 namex==0.0.8
-numpy==2.0.2
 opt_einsum==3.4.0
 optree==0.13.1
 packaging==24.2
@@ -64,7 +63,6 @@ MarkupSafe==3.0.2
 mdurl==0.1.2
 ml-dtypes==0.4.1
 namex==0.0.8
-numpy==2.0.2
 opt_einsum==3.4.0
 optree==0.13.1
 packaging==24.2
