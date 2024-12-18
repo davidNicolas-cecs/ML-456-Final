@@ -100,7 +100,7 @@ def main():
     tuner = kt.RandomSearch(
         hypermodel=build_model,
         objective='val_accuracy',# maybe no early stop
-        max_trials=10, # 15
+        max_trials=1, # 15
         project_name="model_1_tuner"
     )
     '''
@@ -113,7 +113,7 @@ def main():
     '''
     
     # search for best model
-    tuner.search(sub_train, y_sub_train, epochs=15, validation_data = (x_valid,y_valid), batch_size=32) # change to actual val later
+    tuner.search(sub_train, y_sub_train, epochs=1, validation_data = (x_valid,y_valid), batch_size=256) # change to actual val later
 
     models = tuner.get_best_models(num_models=1)
     best_model = models[0]
@@ -121,7 +121,7 @@ def main():
     
 if __name__ == "__main__":
     print(
-        "\nStarting Model 1:\n - Contains ?? layers\n - Every 2 layers of Conv2D, a batch norm and maxpooling layer is applied\n - Possible dropout layer\n - ??? Dense Layers \n - No variation in padding\n - No variation in strides, use l1 regularization\n"
+        "\nStarting Model 1:\n - Contains 3-10 layers\n - Every 2 layers of Conv2D, a batch norm and maxpooling layer is applied\n - Possible dropout layer\n - 5 Dense Layers \n - No variation in padding\n - No variation in strides, use l1 regularization\n"
         +"-----------------------------------------------"
     )
     main()

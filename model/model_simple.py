@@ -168,7 +168,7 @@ def main():
     
 if __name__ == "__main__":
     print(
-        "\nStarting Model 1:\n - Contains ?? layers\n - Every 2 layers of Conv2D, a batch norm and maxpooling layer is applied\n - Possible dropout layer\n - ??? Dense Layers \n - No variation in padding\n - No variation in strides, use l1 regularization\n"
+        "\nStarting Model 1:\n - Contains 4 layers\n - Every layer of Conv2D, a batch norm and maxpooling layer is applied\n - Possible dropout layer\n - ??? Dense Layers \n - No variation in padding\n - No variation in strides, use l1 regularization\n"
         +"-----------------------------------------------"
     )
     main()
