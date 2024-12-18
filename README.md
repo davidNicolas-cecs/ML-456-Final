@@ -17,6 +17,17 @@ python3 --version
 ## Activate the enviorment
 
 To run our models all you need to do is activate the virtual enviorment called `ml-env`. This contains all the libraries and dependencies the project needs in order to run.
+To run on macos/linux:
+
+```bash
+source ml-env/bin/activate
+```
+
+If you are running on windows the following command is used:
+
+```bash
+ml-env/Script/activate
+```
 
 We also provide the requirements.txt file of our dependencies in case you have some other method to install the dependencies.
 
@@ -25,6 +36,10 @@ If the virtual enviorment is missing some imports run:
 ```
 pip install --upgrade -r requirements.txt
 ```
+
+# Note:
+
+For the first half of development we used CPU, and later installed and ran with GPU, ensure you have working GPU, as we did not do any catches for gpu not present, tensor may default to CPU if no gpu detected.
 
 ## To run a model
 
