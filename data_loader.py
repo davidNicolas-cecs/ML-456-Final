@@ -27,6 +27,9 @@ class Animals_loader:
 
     def __init__(self):
         self.dir = "Animals-10/raw-img"
+        
+    def val_split(x,y):
+        return train_test_split(x,y,test_size=.2,random_state=1)
 
     # Split the data into training, and test set
     def split(self, X, Y):

@@ -4,7 +4,7 @@ from utils import encode, hot_encode
 
 from keras.models import Sequential
 from keras.layers import Dense, Activation, InputLayer, Flatten, Conv2D, MaxPooling2D, Dropout, BatchNormalization
-from keras.optimizers import l1
+from keras.regularizers import l1
 from keras.optimizers import RMSprop
 from keras.callbacks import EarlyStopping
 
@@ -12,9 +12,8 @@ import tensorflow as tf
 from tensorflow import keras
 import keras_tuner as kt
 
-def prep():
+def prep(animal_loader):
     # Prepping the data using Animal Loader class and utilty functions 
-    animal_loader = Animals_loader()
     img_dataset = animal_loader.create_dataset()
     x, y = animal_loader.image_to_array(img_dataset)
     y = encode(y)
@@ -61,7 +60,7 @@ def build_model(hp):
           Dense(
                 units=hp.Int(f'dense_units{j}', min_value=32, max_value=512, step=32),
                 activation='sigmoid',
-                kernal_regularization=l1(.1)
+                kernel_regularizer=l1(.1)
             )
         )
 
@@ -83,22 +82,25 @@ def build_model(hp):
 
 
 
-def main():
+def main(animal_loader):
     (
         x_train,
         x_test,
         y_train,
         y_test,
-    ) = prep()
+    ) = prep(animal_loader)
     max_imgs = len(x_train)
     print(x_train[0], y_train[0])
+    # Split into validation set
+    
+    sub_train, x_valid, y_sub_train, y_valid = animal_loader
     
     # Building the model to run trials to test best model    
     build_model(kt.HyperParameters())
     tuner = kt.RandomSearch(
         hypermodel=build_model,
         objective='val_accuracy',# maybe no early stop
-        max_trials=15,
+        max_trials=2, # 15
     )
     '''
     early_stopping = EarlyStopping(
@@ -110,11 +112,13 @@ def main():
     '''
     
     # search for best model
-    tuner.search(x_train, y_train, epochs=60)
+    tuner.search(x_train, y_train, epochs=4, validation_data = (y_train,y_test), batch_size=64) # change to actual val later
 
 
 if __name__ == "__main__":
+    animal_loader = Animals_loader()
+
     print(
         "\nStarting Model 1\n: * Contains ?? layers\n, *Every 2 layers of Conv2D, a batch norm and maxpooling layer is applied\n,\n *Possible dropout layer * ??? Dense Layers\m *No variation in padding\n*No variation in strides, use l1 regularization"
     )
-    main()
+    main(animal_loader)
