@@ -71,6 +71,10 @@ python -m model.model1
 
 ## Components of the Project
 
+#### main.py
+
+This python file was used to test the data loader was correctly splitting and converting the dataset.
+
 #### data_loader.py:
 
 This python file contains the class 'Animal_loader' which houses small useful functions that both models will need setup the data for training and testing. It reduces redundancy in our models code, allowing us to easily call this class to
