@@ -2,7 +2,7 @@ import os
 
 import numpy as np
 from sklearn.model_selection import train_test_split
-from translate import translate
+from utils import translate
 from PIL import Image
 
 
@@ -84,15 +84,19 @@ class Animals_loader:
         Array
             image array and corresponding label
         """
+        img_size = (128, 128)
         img_array = []
         label_array = []
         print("Converting a label image array to numpy arrays...\n")
         # image_size = (128, 128)
         for image in data:
             with Image.open(image[0]) as img:
+                # normalizing
+                img = img.resize(img_size)
                 img_arr = np.array(img)
+                img_arr = img_arr / 255.0
+
             label = image[1]
-            img_arr = np.array(img)
             img_array.append(img_arr)
             label_array.append(label)
         return img_array, label_array
