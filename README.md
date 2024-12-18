@@ -20,6 +20,12 @@ To run our models all you need to do is activate the virtual enviorment called `
 
 We also provide the requirements.txt file of our dependencies in case you have some other method to install the dependencies.
 
+If the virtual enviorment is missing some imports run:
+
+```
+pip install --upgrade -r requirements.txt
+```
+
 ## To run a model
 
 Run each individual model to see its accuracy as well as a sample of the first few images guessed and its true value.
