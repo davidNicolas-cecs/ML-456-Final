@@ -27,12 +27,14 @@ y_train_numeric = encode(y_train)
 y_train_hot_encoded = hot_encode(y_train_numeric)
 print("\nLabels: ", y_train_numeric[0])
 # normalize inputs
+print(len(X_train))
 print("normalized", X_train[1].shape)
 # Test
 print(y_train_hot_encoded[0])
 print("type of x_train set", type(X_train))
 print("type of y_train set", type(y_train_hot_encoded))
 print("type of individual y", type(y_train_hot_encoded[0]))
+sub_train, x_valid, y_sub_train, y_valid = data.val_split(X_train,y_train)
 
 
 
