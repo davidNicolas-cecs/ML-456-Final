@@ -1,5 +1,5 @@
 # add early stopping, extra strides options
-from data_loader import Animals_loader
+from ..data_loader import Animals_loader
 from ..utils import encode, hot_encode
 from keras.models import Sequential
 from keras.layers import Dense, Activation, InputLayer, Flatten, Conv2D, MaxPooling2D, Dropout, BatchNormalization

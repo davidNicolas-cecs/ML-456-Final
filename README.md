@@ -13,6 +13,13 @@ We also provide the requirements.txt file of our dependencies.
 
 Run each individual model to see its accuracy as well as a sample of the first few images guessed and its true value
 
+To run a model:
+
+Command to run model 1 
+```bash
+python -m model1.model1
+```
+
 ### Components of the project
 
 ##### data_loader.py:
